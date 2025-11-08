@@ -1,5 +1,8 @@
 % pilot script to load data and call various functions for difference estimation 
 
+conditions = {'CTRL20', 'iLTP20'};
+cnd_n = length(conditions);
+
 folderN = uigetdir();
 foldparts = strsplit(folderN,filesep); dirname = foldparts{end-1}; clear foldparts
 folderN = ([folderN, filesep]);
@@ -19,28 +22,48 @@ for tb = 1:file_n
 end
 
 var_list = tbl_temp.Properties.VariableNames;
+var_types = tbl_temp.Properties.VariableTypes;
 clear tbl_temp
 var_n = length(var_list);
+table_names = fieldnames(data_tables);
 
 data_struct = struct();  % stores data in grouped format for ggram based plotting
+data_struct.condition = {}; 
 
 for var = 1:var_n
-
     var_name = var_list{var};
-
-    for tb = 1:tbl_name
-
-
-
-
-
+    if var_types(var) == 'double' %#ok<*BDSCA>
+        data_struct.(var_name) = [];
+    elseif var_types(var) == 'cell'
+        data_struct.(var_name) = {};
     end
-
-
-
 end
 
 
+for tb = 1:file_n
+    table_name = table_names{tb};
+
+    data_n = height(data_tables.(table_name));
+    for cnd = 1:cnd_n
+        if contains(table_name, conditions{cnd})
+
+            data_struct.condition = vertcat(data_struct.condition, repmat(conditions(cnd),[data_n 1]));
+        end
+    end
+    for var = 1:var_n
+        var_name = var_list{var};
+
+        data_struct.(var_name) = vertcat(data_struct.(var_name), data_tables.(table_name).(var_name));
+    end
+end
 
 
 %% initial visualization of data
+
+clear g
+
+figure;
+g = gramm('x', data_struct.condition, 'y', data_struct.psd_area);
+g.geom_point('dodge', 0.3);
+g.set_names('x', 'condition', 'y', 'psd_area');
+g.draw();
