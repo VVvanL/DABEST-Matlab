@@ -72,7 +72,7 @@ save([folderN, dirname, '.mat'], 'data_struct', 'data_tables')
 clear g
 
 figure;
-g = gramm('x', data_struct.condition, 'y', data_struct.psd_area, 'color', data_struct.acq);
+g = gramm('x', data_struct.condition, 'y', data_struct.psd_area, 'color', data_struct.experiment);
 g.geom_point('dodge', 0.3);
-g.set_names('x', 'condition', 'y', 'psd_area', 'color', 'aquisition');
+g.set_names('x', 'condition', 'y', 'psd_area', 'color', 'experiment');
 g.draw();
