@@ -56,10 +56,13 @@ for tb = 1:file_n
             data_struct.condition = vertcat(data_struct.condition, repmat(conditions(cnd),[data_n 1]));
         end
     end
+    
+    data_struct.experiment = vertcat(data_struct.experiment, repmat({table_name}, [data_n 1]));
+
     for var = 1:var_n
         var_name = var_list{var};
 
-        data_struct.(var_name) = vertcat(data_struct.(var_name), data_tables.(table_name).(var_name));
+        data_struct.(var_name) = vertcat(data_struct.(var_name), data_tables.(table_name){:, var});
     end
 end
 
