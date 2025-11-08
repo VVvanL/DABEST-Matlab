@@ -22,13 +22,19 @@ for tb = 1:file_n
 end
 
 var_list = tbl_temp.Properties.VariableNames;
+var_list{1} = 'roi';
+var_n = length(var_list);
+% var_list{var_n + 1} = 'exp';
+% var_n = var_n + 1;
+
 var_types = tbl_temp.Properties.VariableTypes;
 clear tbl_temp
-var_n = length(var_list);
+
 table_names = fieldnames(data_tables);
 
 data_struct = struct();  % stores data in grouped format for ggram based plotting
-data_struct.condition = {}; 
+data_struct.condition = {};
+data_struct.experiment = {};
 
 for var = 1:var_n
     var_name = var_list{var};
@@ -57,13 +63,13 @@ for tb = 1:file_n
     end
 end
 
-
+save([folderN, dirname, '.mat'], 'data_struct', 'data_tables')
 %% initial visualization of data
 
 clear g
 
 figure;
-g = gramm('x', data_struct.condition, 'y', data_struct.psd_area);
+g = gramm('x', data_struct.condition, 'y', data_struct.psd_area, 'color', data_struct.acq);
 g.geom_point('dodge', 0.3);
-g.set_names('x', 'condition', 'y', 'psd_area');
+g.set_names('x', 'condition', 'y', 'psd_area', 'color', 'aquisition');
 g.draw();
