@@ -114,6 +114,8 @@ for cnd = 1:cnd_n
     end
 end
 
+save([folderN, dirname, '.mat'], 'ARS057', '-append')
+
 %% create simulated distributions
 
 pd = makedist('Gamma','a',5,'b',1);
