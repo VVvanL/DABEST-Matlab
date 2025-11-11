@@ -68,11 +68,93 @@ end
 
 save([folderN, dirname, '.mat'], 'data_struct', 'data_tables')
 %% initial visualization of data
+metrics = fieldnames(data_struct);
+metrics = metrics(4:end);
+metrics_n = length(metrics);
 
 clear g
 
+for m = 1:metrics_n
+    
+    metric_name = metrics{m};
+
+    g(1,m) = gramm('x', data_struct.condition, 'y', data_struct.(metric_name), 'color', data_struct.experiment); %#ok<*SAGROW>
+    g(1,m).geom_jitter('dodge', 0.6);
+    g(1,m).set_names('x', 'condition', 'y', metric_name,'color','experiment');
+
+end 
 figure;
-g = gramm('x', data_struct.condition, 'y', data_struct.psd_area, 'color', data_struct.experiment);
+g = gramm('x', data_struct.condition, 'y', data_struct.psd_area);
 g.geom_point('dodge', 0.3);
-g.set_names('x', 'condition', 'y', 'psd_area', 'color', 'experiment');
+g.set_names('x', 'condition', 'y', 'psd_area');
+g.draw();
+
+%% create subset of data for distribution modeling 
+% use data from ARS057 datasets; area metrics
+ARS057 = struct();
+ARS057.ctrl = data_tables.CTRL20_ARS057;
+ARS057.iLTP = data_tables.iLTP20_ARS057;
+conditions = {'ctrl', 'iLTP'};
+cnd_n = length(conditions); 
+% calculate mean and variance for each metric
+ARS057.stats = struct();
+
+for cnd = 1:cnd_n
+    cnd_name = conditions{cnd};
+
+    ARS057.stats.(cnd_name).n = height(ARS057.(cnd_name));
+    
+    for m = 1:metrics_n
+        metric_name = metrics{m};
+
+        [V,M] = var(ARS057.(cnd_name).(metric_name));
+
+        ARS057.stats.(cnd_name).(metric_name).var_mean = [V,M];
+
+    end
+end
+
+%% create simulated distributions
+
+pd = makedist('Gamma','a',5,'b',1);
+
+% PDFs of various gamma distributions
+x = 0:0.1:25;
+y1 = gampdf(x,5,1);
+y2 = gampdf(x, 10, 0.5);
+y3 = gampdf(x,5.5,1);
+y4 = gampdf(x,6,1);
+y5 = gampdf(x,6.5,1);
+
+figure; hold on; grid on
+plot(x,y1)
+plot(x,y2)
+plot(x,y3)
+plot(x,y4)
+plot(x,y5)
+
+legend()
+
+sz = [37 1];
+
+r1 = gamrnd(5,1,sz);
+r2 = gamrnd(10,0.5,sz);
+r3 = gamrnd(5.5,1,sz);
+r4 = gamrnd(6,1,sz);
+r5 = gamrnd(6.5,1,sz);
+
+% plot random samples from gamma distributions
+
+r_matrix = [r1, r2, r3, r4, r5];
+y_matrix = [repmat({'y1'},sz), repmat({'y2'},sz), repmat({'y3'},sz), repmat({'y4'},sz), repmat({'y5'},sz)];
+
+gammadist = struct();
+gammadist.r = reshape(r_matrix,[],1);
+gammadist.y = reshape(y_matrix,[],1);
+
+clear g
+
+g = gramm('x', gammadist.y, 'y', gammadist.r);
+g.geom_jitter('dodge', 0.6);
+figure;
 g.draw();
