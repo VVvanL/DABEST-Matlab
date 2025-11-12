@@ -118,24 +118,30 @@ save([folderN, dirname, '.mat'], 'ARS057', '-append')
 
 %% create simulated distributions
 
-pd = makedist('Gamma','a',5,'b',1);
+% pd = makedist('Gamma','a',5,'b',1);
 
 % PDFs of various gamma distributions
+distributions = struct();
+distributions.pdf = struct();
+
 x = 0:0.1:25;
-y1 = gampdf(x,5,1);
-y2 = gampdf(x, 10, 0.5);
-y3 = gampdf(x,5.5,1);
-y4 = gampdf(x,6,1);
-y5 = gampdf(x,6.5,1);
+distributions.pdf.y1 = gampdf(x,5,1);
+distributions.pdf.y2 = gampdf(x, 10, 0.5);
+distributions.pdf.y3 = gampdf(x,5.5,1);
+distributions.pdf.y4 = gampdf(x,6,1);
+distributions.pdf.y5 = gampdf(x,6.5,1);
+distributions.pdf.x = x; clear x
 
-figure; hold on; grid on
-plot(x,y1)
-plot(x,y2)
-plot(x,y3)
-plot(x,y4)
-plot(x,y5)
+save([folderN, dirname, '.mat'], 'distributions', '-append')
 
-legend()
+% figure; hold on; grid on
+% plot(x,y1)
+% plot(x,y2)
+% plot(x,y3)
+% plot(x,y4)
+% plot(x,y5)
+
+% legend()
 
 sz = [37 1];
 
