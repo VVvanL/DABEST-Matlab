@@ -134,31 +134,62 @@ distributions.pdf.x = x; clear x
 
 save([folderN, dirname, '.mat'], 'distributions', '-append')
 
-% figure; hold on; grid on
-% plot(x,y1)
-% plot(x,y2)
-% plot(x,y3)
-% plot(x,y4)
-% plot(x,y5)
+figure; hold on; grid on
+plot(x,distributions.pdf.y1)
+plot(x,distributions.pdf.y2)
+plot(x,distributions.pdf.y3)
+plot(x,distributions.pdf.y4)
+plot(x,distributions.pdf.y5)
 
-% legend()
+legend('y1','y2','y3','y4','y5')
 
-sz = [37 1];
 
-r1 = gamrnd(5,1,sz);
-r2 = gamrnd(10,0.5,sz);
-r3 = gamrnd(5.5,1,sz);
-r4 = gamrnd(6,1,sz);
-r5 = gamrnd(6.5,1,sz);
+% create random samples from mock distributions
+sz = [37 1]; % sample size 
+itr_n = 100; % number of iterations
+dist_n = 5; % number of mock distributions to sample from
+sample_matrix =  zeros([sz(1), dist_n, itr_n]);
+p_matrix = zeros(itr_n, dist_n -1);
 
-% plot random samples from gamma distributions
+for itr = 1:itr_n
 
-r_matrix = [r1, r2, r3, r4, r5];
+    r1 = gamrnd(5,1,sz);
+
+    r2 = gamrnd(10,0.5,sz);
+    p21 = ranksum(r2,r1);
+
+    r3 = gamrnd(5.5,1,sz);
+    p31 = ranksum(r3,r1);
+
+    r4 = gamrnd(6,1,sz);
+    p41 = ranksum(r4,r1);
+
+    r5 = gamrnd(6.5,1,sz);
+    p51 = ranksum(r5,r1);
+
+    r_matrix = [r1, r2, r3, r4, r5];
+    sample_matrix(:,:,itr) = r_matrix;
+    p_matrix(itr,:) = [p21,p31,p41,p51];    
+
+end
+clear r_matrix r1 r2 r3 r4 r5 p21 p31 p41 p51
+
+
+%% scratch plotting commands
+
+xlabels= {'p21','p31','p41','p51'};
+
+figure; histogram(p_matrix(:,1),'BinWidth',0.05,'Normalization','probability')
+figure; histogram(p_matrix(:,2),'BinWidth',0.05,'Normalization','probability')
+figure; histogram(p_matrix(:,3),'BinWidth',0.05,'Normalization','probability')
+figure; histogram(p_matrix(:,4),'BinWidth',0.05,'Normalization','probability')
+
+
 y_matrix = [repmat({'y1'},sz), repmat({'y2'},sz), repmat({'y3'},sz), repmat({'y4'},sz), repmat({'y5'},sz)];
-
 gammadist = struct();
 gammadist.r = reshape(r_matrix,[],1);
 gammadist.y = reshape(y_matrix,[],1);
+
 
 clear g
 
