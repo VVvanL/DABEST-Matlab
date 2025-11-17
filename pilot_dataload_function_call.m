@@ -145,11 +145,17 @@ legend('y1','y2','y3','y4','y5')
 
 
 % create random samples from mock distributions
-sz = [37 1]; % sample size 
+mock_data = struct();
+mock_data.sample37 = struct();
+mock_data.sample23 = struct();
+
+sz = [23 1]; % sample size 
 itr_n = 100; % number of iterations
 dist_n = 5; % number of mock distributions to sample from
 sample_matrix =  zeros([sz(1), dist_n, itr_n]);
 p_matrix = zeros(itr_n, dist_n -1);
+
+
 
 for itr = 1:itr_n
 
@@ -174,12 +180,14 @@ for itr = 1:itr_n
 end
 clear r_matrix r1 r2 r3 r4 r5 p21 p31 p41 p51
 
+save([folderN, dirname, '.mat'], 'mock_data', '-append')
+
 
 %% scratch plotting commands
 
 xlabels= {'p21','p31','p41','p51'};
 
-figure; histogram(p_matrix(:,1),'BinWidth',0.05,'Normalization','probability')
+figure; histogram(p_matrix(:,1),'BinWidth',0.05,'FaceColor', 'Normalization','probability')
 figure; histogram(p_matrix(:,2),'BinWidth',0.05,'Normalization','probability')
 figure; histogram(p_matrix(:,3),'BinWidth',0.05,'Normalization','probability')
 figure; histogram(p_matrix(:,4),'BinWidth',0.05,'Normalization','probability')
