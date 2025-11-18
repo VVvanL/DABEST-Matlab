@@ -80,14 +80,20 @@ for m = 1:metrics_n
 
     g(1,m) = gramm('x', data_struct.condition, 'y', data_struct.(metric_name), 'color', data_struct.experiment); %#ok<*SAGROW>
     g(1,m).geom_jitter('dodge', 0.6);
-    g(1,m).set_names('x', 'condition', 'y', metric_name,'color','experiment');
+    g(1,m).set_title(metric_name);
+    g(1,m).set_names('x', '', 'y', '');
 
 end 
-figure;
-g = gramm('x', data_struct.condition, 'y', data_struct.psd_area);
-g.geom_point('dodge', 0.3);
-g.set_names('x', 'condition', 'y', 'psd_area');
-g.draw();
+g(1, metrics_n).set_names('x', '', 'y', '', 'color','experiment');
+figure
+g.draw()
+
+
+% figure;
+% g = gramm('x', data_struct.condition, 'y', data_struct.psd_area);
+% g.geom_point('dodge', 0.3);
+% g.set_names('x', 'condition', 'y', 'psd_area');
+% g.draw();
 
 %% create subset of data for distribution modeling 
 % use data from ARS057 datasets; area metrics
@@ -113,6 +119,26 @@ for cnd = 1:cnd_n
 
     end
 end
+
+% plot ARS057 data
+
+clear g
+
+for m = 1:metrics_n
+    
+    metric_name = metrics{m};
+
+    g(1,m) = gramm('x', data_struct.condition, 'y', data_struct.(metric_name), 'color', data_struct.experiment); %#ok<*SAGROW>
+    g(1,m).geom_jitter('dodge', 0.6);
+    g(1,m).set_title(metric_name);
+    g(1,m).set_names('x', '', 'y', '');
+
+end 
+g(1, metrics_n).set_names('x', '', 'y', '', 'color','experiment');
+figure
+g.draw()
+
+
 
 save([folderN, dirname, '.mat'], 'ARS057', '-append')
 
