@@ -239,11 +239,11 @@ dists = {'y1','y2','y3','y4','y5'};
 dist_n = length(dists);
 sample_sz = 23;
 
+identifiers = {};
 for dst = 1:dist_n
+    dist_str = dists(dst);
+    temp_cells = repmat(dist_str, sample_sz, 1);
 
-
-
-
-
+    identifiers = vertcat(identifiers, temp_cells); %#ok<*AGROW>
 end
 
