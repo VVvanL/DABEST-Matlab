@@ -73,17 +73,17 @@ legend('y1','y5', 'FontSize',12)
 %% plot swarmchart of selected sample points
 
 
-X1 = categorical(repmat({'y1'},37,1));
-X2 = categorical(repmat({'y2'},37,1));
-X3 = categorical(repmat({'y3'},37,1));
-X4 = categorical(repmat({'y4'},37,1));
-X5 = categorical(repmat({'y5'},37,1));
+X1 = categorical(repmat({'y1'},23,1));
+X2 = categorical(repmat({'y2'},23,1));
+X3 = categorical(repmat({'y3'},23,1));
+X4 = categorical(repmat({'y4'},23,1));
+X5 = categorical(repmat({'y5'},23,1));
 
 
 figure;
-swarmchart(X1, sample_matrix(:,1,42), 17, 'k', 'filled','XjitterWidth',0.05)
+swarmchart(X1, example_data(:,1), 17, 'k', 'filled','XjitterWidth',0.05)
 hold on
-swarmchart(X2, sample_matrix(:,2,42), 17, clr(1,:),'filled','XjitterWidth',0.05)
-swarmchart(X3, sample_matrix(:,3,42), 17, clr(2,:),'filled','XjitterWidth',0.05)
-swarmchart(X4, sample_matrix(:,4,42), 17, clr(3,:),'filled','XjitterWidth',0.05)
-swarmchart(X5, sample_matrix(:,5,42), 17, clr(4,:),'filled','XjitterWidth',0.05)
+swarmchart(X2, example_data(:,2), 17, clr(1,:),'filled','XjitterWidth',0.05)
+swarmchart(X3, example_data(:,3), 17, clr(2,:),'filled','XjitterWidth',0.05)
+swarmchart(X4, example_data(:,4), 17, clr(3,:),'filled','XjitterWidth',0.05)
+swarmchart(X5, example_data(:,5), 17, clr(4,:),'filled','XjitterWidth',0.05)

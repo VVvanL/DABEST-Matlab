@@ -231,3 +231,19 @@ g = gramm('x', gammadist.y, 'y', gammadist.r);
 g.geom_jitter('dodge', 0.6);
 figure;
 g.draw();
+
+%% format example data for DABEST pilot
+
+% create identifier column for DABEST .csv
+dists = {'y1','y2','y3','y4','y5'};
+dist_n = length(dists);
+sample_sz = 23;
+
+for dst = 1:dist_n
+
+
+
+
+
+end
+
