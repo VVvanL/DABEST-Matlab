@@ -84,9 +84,9 @@ for m = 1:metrics_n
 
 end 
 figure;
-% g = gramm('x', data_struct.condition, 'y', data_struct.psd_area);
-% g.geom_point('dodge', 0.3);
-% g.set_names('x', 'condition', 'y', 'psd_area');
+g = gramm('x', data_struct.condition, 'y', data_struct.psd_area);
+g.geom_point('dodge', 0.3);
+g.set_names('x', 'condition', 'y', 'psd_area');
 g.draw();
 
 %% create subset of data for distribution modeling 
@@ -113,6 +113,26 @@ for cnd = 1:cnd_n
 
     end
 end
+
+% plot ARS057 data
+
+clear g
+
+for m = 1:metrics_n
+    
+    metric_name = metrics{m};
+
+    g(1,m) = gramm('x', data_struct.condition, 'y', data_struct.(metric_name), 'color', data_struct.experiment); %#ok<*SAGROW>
+    g(1,m).geom_jitter('dodge', 0.6);
+    g(1,m).set_title(metric_name);
+    g(1,m).set_names('x', '', 'y', '');
+
+end 
+g(1, metrics_n).set_names('x', '', 'y', '', 'color','experiment');
+figure
+g.draw()
+
+
 
 save([folderN, dirname, '.mat'], 'ARS057', '-append')
 
@@ -145,11 +165,13 @@ legend('y1','y2','y3','y4','y5')
 
 
 % create random samples from mock distributions
-sz = [19 1]; % sample size 
+sz = [37 1]; % sample size 
 itr_n = 100; % number of iterations
 dist_n = 5; % number of mock distributions to sample from
 sample_matrix =  zeros([sz(1), dist_n, itr_n]);
 p_matrix = zeros(itr_n, dist_n -1);
+
+
 
 for itr = 1:itr_n
 
@@ -174,12 +196,14 @@ for itr = 1:itr_n
 end
 clear r_matrix r1 r2 r3 r4 r5 p21 p31 p41 p51
 
+save([folderN, dirname, '.mat'], 'mock_data', '-append')
+
 
 %% scratch plotting commands
 
 xlabels= {'p21','p31','p41','p51'};
 
-figure; histogram(p_matrix(:,1),'BinWidth',0.05,'Normalization','probability')
+figure; histogram(p_matrix(:,1),'BinWidth',0.05,'FaceColor', 'Normalization','probability')
 figure; histogram(p_matrix(:,2),'BinWidth',0.05,'Normalization','probability')
 figure; histogram(p_matrix(:,3),'BinWidth',0.05,'Normalization','probability')
 figure; histogram(p_matrix(:,4),'BinWidth',0.05,'Normalization','probability')
@@ -197,3 +221,19 @@ g = gramm('x', gammadist.y, 'y', gammadist.r);
 g.geom_jitter('dodge', 0.6);
 figure;
 g.draw();
+
+%% format example data for DABEST pilot
+
+% create identifier column for DABEST .csv
+dists = {'y1','y2','y3','y4','y5'};
+dist_n = length(dists);
+sample_sz = 23;
+
+identifiers = {};
+for dst = 1:dist_n
+    dist_str = dists(dst);
+    temp_cells = repmat(dist_str, sample_sz, 1);
+
+    identifiers = vertcat(identifiers, temp_cells); %#ok<*AGROW>
+end
+
