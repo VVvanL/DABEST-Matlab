@@ -84,9 +84,9 @@ for m = 1:metrics_n
 
 end 
 figure;
-g = gramm('x', data_struct.condition, 'y', data_struct.psd_area);
-g.geom_point('dodge', 0.3);
-g.set_names('x', 'condition', 'y', 'psd_area');
+% g = gramm('x', data_struct.condition, 'y', data_struct.psd_area);
+% g.geom_point('dodge', 0.3);
+% g.set_names('x', 'condition', 'y', 'psd_area');
 g.draw();
 
 %% create subset of data for distribution modeling 
@@ -145,7 +145,7 @@ legend('y1','y2','y3','y4','y5')
 
 
 % create random samples from mock distributions
-sz = [37 1]; % sample size 
+sz = [19 1]; % sample size 
 itr_n = 100; % number of iterations
 dist_n = 5; % number of mock distributions to sample from
 sample_matrix =  zeros([sz(1), dist_n, itr_n]);
